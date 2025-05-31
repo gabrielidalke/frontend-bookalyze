@@ -1,121 +1,161 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+
+import React from 'react'; 
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'; 
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage'; 
+import RegisterPage from './pages/RegisterPage';
 import PrivateRoute from './routes/PrivateRoute';
-import Dashboard from './pages/DashboardPage';
-import ReservaForm from './components/ReservationForm';
-import ReservationList from './pages/ReservationPage';
-import CalendarView from './components/CalendarView';
+import Dashboard from './pages/DashboardPage'; 
+import ReservationList from './pages/ReservationPage'; 
+import ReservaForm from './components/ReservationForm'; 
+import CalendarView from './components/CalendarView'; 
+
+
+import ApartamentoFormPage from './pages/ApartamentoForm';
+import ContatoFormPage from './pages/ContatoFormPage';
+import ReservationFormPage from './pages/ReservationFormPage'; 
+
+const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login'); 
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      {}
+      <nav className="bg-blue-600 p-4 text-white shadow-md">
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Sistema de Reservas</h1>
+          <div className="space-x-4">
+            {}
+            <button onClick={() => navigate('/')} className="hover:underline">Home</button>
+            <button onClick={() => navigate('/dashboard')} className="hover:underline">Dashboard</button>
+            <button onClick={() => navigate('/reservas')} className="hover:underline">Reservas</button>
+            <button onClick={() => navigate('/reservas/nova')} className="hover:underline">Nova Reserva</button> {}
+            <button onClick={() => navigate('/apartment')} className="hover:underline">Apartamentos</button>
+            <button onClick={() => navigate('/contacts')} className="hover:underline">Contatos</button>
+            {}
+            <button
+              onClick={handleLogout}
+              className="ml-4 px-3 py-1 bg-red-700 rounded-md hover:bg-red-800 transition-colors"
+            >
+              Sair
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {}
+      <main className="flex-grow container mx-auto p-6">
+        {children} {}
+      </main>
+
+      {}
+      <footer className="bg-gray-800 p-4 text-white text-center mt-auto">
+        <p>&copy; {new Date().getFullYear()} Sistema de Reservas. Todos os direitos reservados.</p>
+      </footer>
+    </div>
+  );
+};
+
+
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Páginas públicas */}
+        {}
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} /> 
+        <Route path="/register" element={<RegisterPage />} />
 
-        {/* Rota inicial protegida com conteúdo completo */}
+        {}
         <Route
           path="/"
           element={
             <PrivateRoute>
-              <AppConteudo />
+              <MainLayout>
+                {}
+                <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">Bem-vindo ao Sistema de Reservas!</h2>
+                {}
+                <Dashboard />
+                <hr className="my-8 border-t-2 border-gray-200" />
+                <ReservationList />
+                 {}
+                {}
+              </MainLayout>
             </PrivateRoute>
           }
         />
 
-        {/* Rotas protegidas individuais */}
+        {}
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
-              <Dashboard />
+              <MainLayout>
+                <Dashboard />
+              </MainLayout>
             </PrivateRoute>
           }
         />
-
-        <Route
-          path="/form"
-          element={
-            <PrivateRoute>
-              <ReservaForm />
-            </PrivateRoute>
-          }
-        />
-
         <Route
           path="/reservas"
           element={
             <PrivateRoute>
-              <ReservationList />
+              <MainLayout>
+                <ReservationList />
+              </MainLayout>
             </PrivateRoute>
           }
         />
-
         <Route
-          path="/calendario"
+          path="/reservas/nova" 
           element={
             <PrivateRoute>
-              <CalendarView />
+              <MainLayout>
+                <ReservationFormPage /> {}
+              </MainLayout>
             </PrivateRoute>
           }
         />
+        <Route
+          path="/apartment"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <ApartamentoFormPage />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/contacts"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <ContatoFormPage />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/calendario" 
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <CalendarView />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+
+        {}
+        <Route path="*" element={<LoginPage />} />
       </Routes>
     </Router>
-  );
-}
-
-// Conteúdo principal mostrado na rota "/"
-function AppConteudo() {
-  const handleLogout = () => {
-    // Remover o token de autenticação
-    localStorage.removeItem('token');
-    // Redirecionar para a página de login
-    window.location.href = '/login';
-  };
-
-  return (
-    <div className="p-4">
-      <h1 className="text-center text-2xl font-bold mb-4">
-        Sistema de Reservas 
-        <button 
-          onClick={handleLogout} 
-          className="ml-4 text-sm text-blue-600 underline">
-            Sair
-        </button>
-      </h1>
-      
-      {/* Seção do Dashboard */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold">Dashboard de Reservas</h2>
-        <Dashboard />
-      </div>
-      
-      <hr className="my-4" />
-      
-      {/* Seção do Calendar View */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold">Calendário de Reservas</h2>
-        <CalendarView />
-      </div>
-
-      <hr className="my-4" />
-      
-      {/* Seção do Formulário de Reserva */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold">Cadastrar Nova Reserva</h2>
-        <ReservaForm />
-      </div>
-
-      <hr className="my-4" />
-      
-      {/* Seção da Lista de Reservas */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold">Lista de Reservas</h2>
-        <ReservationList />
-      </div>
-    </div>
   );
 }
 

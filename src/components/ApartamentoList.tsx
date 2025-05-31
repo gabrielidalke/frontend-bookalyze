@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-// Define o tipo para a estrutura de um apartamento, incluindo o 'id'
+
 type Apartamento = {
-  id: number; // Adicionado o ID, pois você vai buscar apartamentos existentes
+  id: number;
   title: string;
   city: string;
   state: string;
@@ -11,42 +11,29 @@ type Apartamento = {
 };
 
 const ApartamentoList: React.FC = () => {
-  // Estado para armazenar a lista de apartamentos
   const [apartamentos, setApartamentos] = useState<Apartamento[]>([]);
-  // Estados para mensagens de carregamento e erro
-  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // useEffect para buscar os apartamentos quando o componente for montado
   useEffect(() => {
     const fetchApartamentos = async () => {
       try {
-        // Faz a requisição GET para o endpoint que retorna todos os apartamentos
         const response = await fetch("http://localhost:8081/api/apartments");
 
         if (response.ok) {
           const data: Apartamento[] = await response.json();
-          setApartamentos(data); // Atualiza o estado com a lista de apartamentos
+          setApartamentos(data);
         } else {
-          // Se a resposta não for OK, tenta ler a mensagem de erro do servidor
           const errorData = await response.json();
           setError(errorData.message || "Erro ao carregar apartamentos.");
         }
       } catch (err) {
-        // Captura erros de conexão ou outros erros de rede
-        setError("Erro na conexão com o servidor ao carregar apartamentos.");
+        setError("Erro na conexão com o servidor.");
         console.error("Erro ao buscar apartamentos:", err);
-      } finally {
-        setLoading(false); // Define o estado de carregamento como falso, independentemente do sucesso ou falha
       }
     };
 
-    fetchApartamentos(); // Chama a função para buscar os apartamentos
-  }, []); // O array de dependências vazio garante que a função seja executada apenas uma vez, na montagem do componente
-
-  if (loading) {
-    return <div className="text-center p-4">Carregando apartamentos...</div>;
-  }
+    fetchApartamentos();
+  }, []);
 
   if (error) {
     return (

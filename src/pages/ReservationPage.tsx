@@ -10,7 +10,10 @@ export default function ReservationListPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getReservas().then((res) => setReservas(res.data));
+    getReservas().then((res) => {
+      console.log(res.data);
+      setReservas(res.data);
+    });
   }, []);
 
   const handleBuscar = () => {
@@ -20,7 +23,7 @@ export default function ReservationListPage() {
   return (
     <div className="min-h-screen bg-gray-100 px-4 py-10">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8">
-        {/* Voltar e Nova Reserva */}
+        {}
         <div className="flex justify-between items-center mb-6">
           <button
             onClick={() => navigate("/dashboard")}
@@ -69,6 +72,7 @@ export default function ReservationListPage() {
           </button>
         </div>
 
+        {}
         <ul className="divide-y divide-gray-200">
           {reservas.length === 0 ? (
             <li className="text-center text-gray-500 py-6">
@@ -80,10 +84,9 @@ export default function ReservationListPage() {
                 key={i}
                 className={`p-4 ${i % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
               >
-                <strong>{reserva.apartamento?.nome}</strong> —{" "}
-                {reserva.contato?.nome}
+                <strong>{reserva.apartment?.title}</strong> — {reserva.contact?.name}
                 <br />
-                {reserva.dataInicio} até {reserva.dataFim}
+                {reserva.checkinDate} até {reserva.checkoutDate}
               </li>
             ))
           )}

@@ -9,16 +9,18 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    setErro('');
+    setErro('');  
     try {
+   
       const response = await axios.post('http://localhost:8081/auth/login', {
         username,
         password,
       });
 
-      const token = response.data.token;
-      localStorage.setItem('token', token);
-      navigate('/dashboard');
+     
+      
+      navigate('/dashboard');  
+
     } catch (err) {
       setErro('Usuário ou senha inválidos');
       console.error('Erro ao fazer login:', err);

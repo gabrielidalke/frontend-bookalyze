@@ -14,7 +14,7 @@ const ApartamentoForm: React.FC = () => {
     city: "",
     state: "",
     maxGuests: 1,
-    dailyRate: NaN,  // Inicia como NaN
+    dailyRate: NaN, 
   });
 
   const [mensagem, setMensagem] = useState<string | null>(null);
@@ -33,14 +33,14 @@ const ApartamentoForm: React.FC = () => {
     setMensagem(null);
     setErro(null);
 
-    // Verifica se o campo dailyRate é válido antes de enviar
+    
     if (isNaN(apartamento.dailyRate) || apartamento.dailyRate <= 0) {
       setErro("A diária deve ser um valor positivo.");
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:8081/apartments", {
+      const response = await fetch("http://localhost:8081/api/apartments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ const ApartamentoForm: React.FC = () => {
           city: "",
           state: "",
           maxGuests: 1,
-          dailyRate: NaN, // Limpa o campo
+          dailyRate: NaN, 
         });
       } else {
         const errorData = await response.json();
@@ -113,7 +113,7 @@ const ApartamentoForm: React.FC = () => {
         name="dailyRate"
         type="number"
         step="0.01"
-        value={isNaN(apartamento.dailyRate) ? "" : apartamento.dailyRate} // Remove o "0" inicial
+        value={isNaN(apartamento.dailyRate) ? "" : apartamento.dailyRate} 
         onChange={handleChange}
         placeholder="Diária (R$)"
         className="p-3 border rounded w-full"
